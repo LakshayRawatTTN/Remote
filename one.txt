@@ -1,5 +1,2 @@
-<<<<<<< HEAD
 hello i am one
-=======
-hello i am one 
->>>>>>> c1dd64285731f0ef22f9faf0284ef18c83fe740d
+
