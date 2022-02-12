@@ -1,7 +1,0 @@
-<<<<<<< HEAD
-hello i am one
-some changes happend
-
-=======
-Hello I am ONE 
->>>>>>> hello
