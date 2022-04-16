@@ -44,7 +44,7 @@ public class SellerService {
         Seller seller = new Seller(sellerModel);
         User user = new User(sellerModel);
         user.setPassword(passwordEncoder.encode(sellerModel.getPassword()));
-        user.setRoles(roleRepository.findAllByIdIn(Arrays.asList(1L)));
+        user.setRoles(roleRepository.findAllByIdIn(Arrays.asList(2L)));
         seller.setUser(user);
         sellerRepository.save(seller);
 

@@ -1,5 +1,8 @@
 package com.bootcamp.project.ecommerceapplication.models;
 
+import com.bootcamp.project.ecommerceapplication.domain.Address;
+import com.bootcamp.project.ecommerceapplication.domain.User;
+
 public class AddressModel {
     private Long id;
     private String city;
@@ -8,6 +11,22 @@ public class AddressModel {
     private String addressLine;
     private String zipCode;
     private String label;
+
+    public AddressModel(){
+
+    }
+
+    public AddressModel(Address address) {
+        this.id = address.getId();
+        this.city = address.getCity();
+        this.state = address.getState();
+        this.country = address.getCountry();
+        this.addressLine = address.getAddressLine();
+        this.zipCode = address.getZipCode();
+        this.label = address.getLabel();
+
+
+    }
 
     public Long getId() {
         return id;

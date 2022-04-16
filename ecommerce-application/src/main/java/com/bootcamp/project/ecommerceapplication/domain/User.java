@@ -22,12 +22,12 @@ public class User {
     private String middleName;
     private String lastName;
     private String password;
-    private boolean is_deleted;
-    private boolean is_active;
-    private boolean is_expired;
-    private boolean is_locked;
-    private int invalid_attempt_count;
-    private Date password_update_date;
+    private boolean isDeleted;
+    private boolean isActive;
+    private boolean isExpired;
+    private boolean isLocked;
+    private int invalidAttemptCount;
+    private Date passwordUpdateDate;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -109,52 +109,52 @@ public class User {
         this.password = password;
     }
 
-    public boolean isIs_deleted() {
-        return is_deleted;
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
-    public void setIs_deleted(boolean is_deleted) {
-        this.is_deleted = is_deleted;
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
-    public boolean isIs_active() {
-        return is_active;
+    public boolean isActive() {
+        return isActive;
     }
 
-    public void setIs_active(boolean is_active) {
-        this.is_active = is_active;
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
-    public boolean isIs_expired() {
-        return is_expired;
+    public boolean isExpired() {
+        return isExpired;
     }
 
-    public void setIs_expired(boolean is_expired) {
-        this.is_expired = is_expired;
+    public void setExpired(boolean expired) {
+        isExpired = expired;
     }
 
-    public boolean isIs_locked() {
-        return is_locked;
+    public boolean isLocked() {
+        return isLocked;
     }
 
-    public void setIs_locked(boolean is_locked) {
-        this.is_locked = is_locked;
+    public void setLocked(boolean locked) {
+        isLocked = locked;
     }
 
-    public int getInvalid_attempt_count() {
-        return invalid_attempt_count;
+    public int getInvalidAttemptCount() {
+        return invalidAttemptCount;
     }
 
-    public void setInvalid_attempt_count(int invalid_attempt_count) {
-        this.invalid_attempt_count = invalid_attempt_count;
+    public void setInvalidAttemptCount(int invalidAttemptCount) {
+        this.invalidAttemptCount = invalidAttemptCount;
     }
 
-    public Date getPassword_update_date() {
-        return password_update_date;
+    public Date getPasswordUpdateDate() {
+        return passwordUpdateDate;
     }
 
-    public void setPassword_update_date(Date password_update_date) {
-        this.password_update_date = password_update_date;
+    public void setPasswordUpdateDate(Date passwordUpdateDate) {
+        this.passwordUpdateDate = passwordUpdateDate;
     }
 
     public List<Role> getRoles() {
@@ -189,6 +189,8 @@ public class User {
         return null;
     }
 
+
+
     @Override
     public String toString() {
         return "User{" +
@@ -198,12 +200,12 @@ public class User {
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", password='" + password + '\'' +
-                ", is_deleted=" + is_deleted +
-                ", is_active=" + is_active +
-                ", is_expired=" + is_expired +
-                ", is_locked=" + is_locked +
-                ", invalid_attempt_count=" + invalid_attempt_count +
-                ", password_update_date=" + password_update_date +
+                ", isDeleted=" + isDeleted +
+                ", isActive=" + isActive +
+                ", isExpired=" + isExpired +
+                ", isLocked=" + isLocked +
+                ", invalidAttemptCount=" + invalidAttemptCount +
+                ", passwordUpdateDate=" + passwordUpdateDate +
                 ", roles=" + roles +
                 ", address=" + address +
                 '}';

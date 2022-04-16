@@ -1,6 +1,6 @@
 package com.bootcamp.project.ecommerceapplication.models;
 
-import org.springframework.data.domain.PageRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class CustomerModel {
 
@@ -11,6 +11,8 @@ public class CustomerModel {
     private String email;
     private String contact;
     private String Password;
+
+    private boolean isActive;
 
     public long getId() {
         return id;
@@ -66,5 +68,13 @@ public class CustomerModel {
 
     public void setContact(String contact) {
         this.contact = contact;
+    }
+
+    public boolean isActive(boolean active) {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

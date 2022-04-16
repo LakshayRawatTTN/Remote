@@ -40,7 +40,7 @@ public class AdminController {
         return sellerService.getList();
     }
 
-    @PutMapping("/activate-customer/{user}")
+    @PutMapping("/activate/customer/{user}")
     public ResponseEntity<String> activateCustomer(@PathVariable String user) {
 
         if (adminService.activate(user)) {
@@ -49,7 +49,7 @@ public class AdminController {
         return new ResponseEntity<>("customer not activated", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/activate-seller/{user}")
+    @PutMapping("/activate/seller/{user}")
     public ResponseEntity<String> activateSeller(@PathVariable String user) {
 
         if (adminService.activate(user)) {
@@ -58,7 +58,7 @@ public class AdminController {
         return new ResponseEntity<>("seller not found", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/deactivate-customer/{user}")
+    @PutMapping("/deactivate/customer/{user}")
     public ResponseEntity<String> deactivateCustomer(@PathVariable String user) {
 
         if (adminService.deactivate(user)) {
@@ -67,7 +67,7 @@ public class AdminController {
         return new ResponseEntity<>("customer not found", HttpStatus.NOT_FOUND);
     }
 
-    @PutMapping("/deactivate-seller/{user}")
+    @PutMapping("/deactivate/seller/{user}")
     public ResponseEntity<String> deactivateSeller(@PathVariable String user) {
 
         if (adminService.deactivate(user)) {

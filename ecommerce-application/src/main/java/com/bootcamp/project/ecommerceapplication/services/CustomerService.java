@@ -1,15 +1,11 @@
 package com.bootcamp.project.ecommerceapplication.services;
 
-import com.bootcamp.project.ecommerceapplication.domain.Customer;
-import com.bootcamp.project.ecommerceapplication.domain.User;
-import com.bootcamp.project.ecommerceapplication.domain.ConfirmationToken;
+import com.bootcamp.project.ecommerceapplication.domain.*;
 import com.bootcamp.project.ecommerceapplication.exceptions.UserNotFoundException;
+import com.bootcamp.project.ecommerceapplication.models.AddressModel;
 import com.bootcamp.project.ecommerceapplication.models.CustomerModel;
 import com.bootcamp.project.ecommerceapplication.models.UserModel;
-import com.bootcamp.project.ecommerceapplication.repositories.CustomerRepository;
-import com.bootcamp.project.ecommerceapplication.repositories.RoleRepository;
-import com.bootcamp.project.ecommerceapplication.repositories.TokenRepository;
-import com.bootcamp.project.ecommerceapplication.repositories.UserRepository;
+import com.bootcamp.project.ecommerceapplication.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +13,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.xml.ws.Response;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,9 +20,11 @@ import java.util.List;
 public class CustomerService {
 
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
@@ -38,7 +35,7 @@ public class CustomerService {
     @Autowired
     private UserRepository userRepository;
 
-    public Customer addCustomer(CustomerModel customerModel){
+    public Customer addCustomer(CustomerModel customerModel) {
 
         Customer customer = new Customer(customerModel);
         User user = new User();
@@ -47,7 +44,8 @@ public class CustomerService {
         user.setMiddleName(customerModel.getMiddleName());
         user.setLastName(customerModel.getLastName());
         user.setPassword(passwordEncoder.encode(customerModel.getPassword()));
-        user.setRoles(roleRepository.findAllByIdIn(Arrays.asList(1L)));
+        List<Role> roles = roleRepository.findAllByIdIn(Arrays.asList(1L));
+        user.setRoles(roles);
         customer.setUser(user);
         customerRepository.save(customer);
         ConfirmationToken confirmationToken = new ConfirmationToken(user);
@@ -55,7 +53,7 @@ public class CustomerService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setSubject("Complete registration");
         mailMessage.setText("To confirm your account, please click on the given link : "
-                +"http://localhost:8080/users/confirm?token="+confirmationToken.getConfirmationToken());
+                + "http://localhost:8080/customer/confirm?token=" + confirmationToken.getConfirmationToken());
         mailMessage.setTo(user.getEmail());
 
 
@@ -65,7 +63,7 @@ public class CustomerService {
 
     }
 
-    public List<Customer> getList(){
+    public List<Customer> getList() {
         List<Customer> customers = customerRepository.findAll();
         return customers;
     }
@@ -80,12 +78,49 @@ public class CustomerService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setSubject("Complete registration");
         mailMessage.setText("To confirm your account, please click on the given link : "
-                +"http://localhost:8080/users/confirm?token="+confirmationToken.getConfirmationToken());
+                + "http://localhost:8080/users/confirm?token=" + confirmationToken.getConfirmationToken());
         mailMessage.setTo(user.getEmail());
         UserModel userModel = new UserModel(user);
 
         emailService.sendEmail(mailMessage);
         return new ResponseEntity<UserModel>(userModel, HttpStatus.OK);
+    }
+
+    public ResponseEntity<CustomerModel> viewProfile(String email) throws UserNotFoundException {
+
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            CustomerModel customerModel = new CustomerModel();
+            customerModel.setId(user.getId());
+            customerModel.setEmail(user.getEmail());
+            customerModel.setFirstName(user.getFirstName());
+            customerModel.setMiddleName(user.getMiddleName());
+            customerModel.setLastName(user.getLastName());
+            Customer customer = customerRepository.findById(user.getId());
+            customerModel.setContact(customer.getContact());
+            customerModel.isActive(user.isActive());
+            return new ResponseEntity<CustomerModel>(customerModel, HttpStatus.OK);
+        }
+        {
+            throw new UserNotFoundException("customer not found");
+        }
+    }
+
+    public ResponseEntity<Address> findAddress() {
+        User currentUser = User.currentUser();
+        User user = userRepository.findByEmail(currentUser.getEmail());
+        Address address = user.getAddress();
+
+        return new ResponseEntity<Address>(address, HttpStatus.FOUND);
+    }
+
+    public User addAddress(AddressModel addressModel) {
+        User user = User.currentUser();
+        Address address = new Address(addressModel);
+        addressRepository.save(address);
+        user.setAddress(address);
+        userRepository.save(user);
+        return user;
     }
 
 }

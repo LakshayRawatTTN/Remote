@@ -1,5 +1,8 @@
 package com.bootcamp.project.ecommerceapplication.models;
 
+import com.bootcamp.project.ecommerceapplication.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class SellerModel {
 
     private String email;
@@ -11,6 +14,16 @@ public class SellerModel {
     private String companyContact;
     private String companyName;
 
+    public SellerModel() {
+    }
+
+    public SellerModel(User user) {
+        this.email = user.getEmail();
+        this.firstName = user.getFirstName();
+        this.middleName = user.getMiddleName();
+        this.lastName = user.getLastName();
+
+    }
 
     public String getEmail() {
         return email;

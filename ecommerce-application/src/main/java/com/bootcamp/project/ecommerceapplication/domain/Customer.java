@@ -23,7 +23,6 @@ public class Customer {
     }
 
     public Customer(CustomerModel customerModel) {
-        this.id = customerModel.getId();
         this.contact = customerModel.getContact();
     }
 

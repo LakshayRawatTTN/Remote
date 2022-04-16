@@ -13,8 +13,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     User findByEmail(String email);
 
     @Modifying
-    @Query(value = "update user set is_active=true where email = email ",nativeQuery = true)
-    void updateUser(@Param("email") String email);
+    @Query(value = "update user set is_active=flag where email = email ",nativeQuery = true)
+    void updateUser(@Param("email") String email,@Param("flag") boolean flag);
 
 
 }

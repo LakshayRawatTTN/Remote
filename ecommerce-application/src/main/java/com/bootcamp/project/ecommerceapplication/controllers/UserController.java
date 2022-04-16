@@ -11,6 +11,7 @@ import com.bootcamp.project.ecommerceapplication.repositories.TokenRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.UserRepository;
 import com.bootcamp.project.ecommerceapplication.services.UserService;
 import com.bootcamp.project.ecommerceapplication.utils.JwtUtils;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,6 +41,8 @@ public class UserController {
 
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
     public User register(@Valid @RequestBody UserModel user) throws PasswordMismatch {
@@ -75,6 +79,33 @@ public class UserController {
         return User.currentUser();
     }
 
+
+    @PostMapping(value = {"/forgotpassword"})
+    public ResponseEntity<User> forgotPassword(@RequestBody ObjectNode objectNode) throws UserNotFoundException {
+        String email = objectNode.get("email").asText();
+        return userService.forgotPassword(email);
+    }
+
+//    @PutMapping(value = {"/resetpassword"})
+//    public void resetPassword(@RequestParam("token") String confirmationToken,@RequestBody ObjectNode objectNode) {
+//        ConfirmationToken token = tokenRepository.findByConfirmationToken(confirmationToken);
+//        if (token != null) {
+//            User user = userRepository.findByEmail(token.getUserEntity().getEmail());
+//            String newPassword = objectNode.get("newPassword").asText();
+//            String confirmPassword = objectNode.get("confirmPassword").asText();
+//            if(newPassword.equals(confirmPassword)){
+//                user.setPassword(passwordEncoder.encode(newPassword));
+//                userRepository.save(user);
+//            }
+//            else {
+//                System.out.println("New Password and Confirm Password do not match");
+//            }
+//
+//        } else {
+//            System.out.println("token invalid");
+//        }
+//
+//    }
 
 }
 

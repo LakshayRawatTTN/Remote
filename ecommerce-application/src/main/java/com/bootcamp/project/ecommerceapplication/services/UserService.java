@@ -1,15 +1,21 @@
 package com.bootcamp.project.ecommerceapplication.services;
 
+import com.bootcamp.project.ecommerceapplication.domain.Address;
+import com.bootcamp.project.ecommerceapplication.domain.ConfirmationToken;
 import com.bootcamp.project.ecommerceapplication.domain.Role;
 import com.bootcamp.project.ecommerceapplication.domain.User;
 import com.bootcamp.project.ecommerceapplication.exceptions.PasswordMismatch;
 import com.bootcamp.project.ecommerceapplication.exceptions.UserNotFoundException;
 import com.bootcamp.project.ecommerceapplication.models.LoginModel;
+import com.bootcamp.project.ecommerceapplication.models.PasswordModel;
 import com.bootcamp.project.ecommerceapplication.models.UserModel;
 import com.bootcamp.project.ecommerceapplication.repositories.RoleRepository;
+import com.bootcamp.project.ecommerceapplication.repositories.TokenRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +37,10 @@ public class UserService implements UserDetailsService {
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private TokenRepository tokenRepository;
+    @Autowired
+    private EmailService emailService;
 
     public User save(UserModel userModel) throws PasswordMismatch {
         if(!userModel.getPassword().equals(userModel.getConfirmPassword())){
@@ -77,10 +87,40 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public User passwordUpdate(){
-        return User.currentUser();
+    public ResponseEntity<User> forgotPassword(String email) throws UserNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            ConfirmationToken confirmationToken = new ConfirmationToken(user);
+            tokenRepository.save(confirmationToken);
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setTo(user.getEmail());
+            mailMessage.setSubject("Forgot Password!");
+            mailMessage.setText("To reset your password, please click here : "
+                    + "http://localhost:8080/reset-password?token=" + confirmationToken.getConfirmationToken());
+
+
+            emailService.sendEmail(mailMessage);
+            return new ResponseEntity<User>(user, HttpStatus.OK);
+        } else {
+            throw new UserNotFoundException("user not found");
+        }
+
+
     }
 
-
+    public ResponseEntity<String> updatePassword(PasswordModel passwordModel) throws PasswordMismatch {
+        User user = User.currentUser();
+        if(passwordModel.getPassword().equals(passwordModel.getConfirmPassword())){
+            user.setPassword(passwordEncoder.encode(passwordModel.getPassword()));
+            userRepository.save(user);
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            mailMessage.setSubject("password changed");
+            mailMessage.setText("Your password is changed");
+            mailMessage.setTo(user.getEmail());
+            emailService.sendEmail(mailMessage);
+            return new ResponseEntity<String>("password changed",HttpStatus.OK);
+        }
+        throw new PasswordMismatch("password and confirm password should be same");
+    }
 
 }
