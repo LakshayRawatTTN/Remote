@@ -1,10 +1,16 @@
 package com.bootcamp.project.ecommerceapplication.models;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.util.Set;
 
 public class CategoryMetadataValueModel {
+
+    @Positive(message = "enter category id")
     private long categoryId;
+    @Positive(message = "enter metadata id")
     private long metadataId;
+    @NotBlank(message = "enter values")
     private String values;
 
     public CategoryMetadataValueModel() {

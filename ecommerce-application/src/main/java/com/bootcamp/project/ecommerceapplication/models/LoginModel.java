@@ -1,8 +1,12 @@
 package com.bootcamp.project.ecommerceapplication.models;
 
+import javax.validation.constraints.NotBlank;
+
 public class LoginModel {
-    private String username;
-    private String password;
+   @NotBlank(message = "enter username")
+   private String username;
+   @NotBlank(message = "enter password")
+   private String password;
 
     public String getUsername() {
         return username;

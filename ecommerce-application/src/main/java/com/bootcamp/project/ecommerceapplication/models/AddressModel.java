@@ -3,13 +3,21 @@ package com.bootcamp.project.ecommerceapplication.models;
 import com.bootcamp.project.ecommerceapplication.domain.Address;
 import com.bootcamp.project.ecommerceapplication.domain.User;
 
+import javax.validation.constraints.NotBlank;
+
 public class AddressModel {
     private Long id;
+    @NotBlank(message = "enter city")
     private String city;
+    @NotBlank(message = "enter state")
     private String state;
+    @NotBlank(message = "enter country")
     private String country;
+    @NotBlank(message = "enter address")
     private String addressLine;
+    @NotBlank(message = "enter zipcode")
     private String zipCode;
+    @NotBlank(message = "enter label")
     private String label;
 
     public AddressModel(){
