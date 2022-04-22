@@ -1,12 +1,10 @@
 package com.bootcamp.project.ecommerceapplication.services;
 
-import com.bootcamp.project.ecommerceapplication.domain.Address;
 import com.bootcamp.project.ecommerceapplication.domain.ConfirmationToken;
 import com.bootcamp.project.ecommerceapplication.domain.Role;
 import com.bootcamp.project.ecommerceapplication.domain.User;
 import com.bootcamp.project.ecommerceapplication.exceptions.PasswordMismatch;
 import com.bootcamp.project.ecommerceapplication.exceptions.UserNotFoundException;
-import com.bootcamp.project.ecommerceapplication.models.LoginModel;
 import com.bootcamp.project.ecommerceapplication.models.PasswordModel;
 import com.bootcamp.project.ecommerceapplication.models.UserModel;
 import com.bootcamp.project.ecommerceapplication.repositories.RoleRepository;
@@ -22,9 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.*;
 

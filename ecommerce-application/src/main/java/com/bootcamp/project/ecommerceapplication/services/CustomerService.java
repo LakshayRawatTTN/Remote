@@ -68,7 +68,7 @@ public class CustomerService {
         return customers;
     }
 
-    public ResponseEntity<UserModel> resend(String email) throws UserNotFoundException {
+    public ResponseEntity<String> resend(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UserNotFoundException("User Not found");
@@ -80,10 +80,9 @@ public class CustomerService {
         mailMessage.setText("To confirm your account, please click on the given link : "
                 + "http://localhost:8080/users/confirm?token=" + confirmationToken.getConfirmationToken());
         mailMessage.setTo(user.getEmail());
-        UserModel userModel = new UserModel(user);
 
         emailService.sendEmail(mailMessage);
-        return new ResponseEntity<UserModel>(userModel, HttpStatus.OK);
+        return new ResponseEntity<String>("Token resended for activation", HttpStatus.OK);
     }
 
     public ResponseEntity<CustomerModel> viewProfile(String email) throws UserNotFoundException {
@@ -91,7 +90,6 @@ public class CustomerService {
         User user = userRepository.findByEmail(email);
         if (user != null) {
             CustomerModel customerModel = new CustomerModel();
-            customerModel.setId(user.getId());
             customerModel.setEmail(user.getEmail());
             customerModel.setFirstName(user.getFirstName());
             customerModel.setMiddleName(user.getMiddleName());

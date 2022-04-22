@@ -1,5 +1,6 @@
 package com.bootcamp.project.ecommerceapplication.advice;
 
+import com.bootcamp.project.ecommerceapplication.exceptions.FieldExist;
 import com.bootcamp.project.ecommerceapplication.exceptions.PasswordMismatch;
 import com.bootcamp.project.ecommerceapplication.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -40,4 +41,11 @@ public class ApplicationExceptionHandler {
         return errorMap;
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(FieldExist.class)
+    public Map<String,String> fieldnotfounf(FieldExist exception){
+        Map<String,String> errorMap = new HashMap<>();
+        errorMap.put("error message: ", exception.getMessage());
+        return errorMap;
+    }
 }

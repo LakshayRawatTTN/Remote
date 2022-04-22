@@ -1,23 +1,21 @@
 package com.bootcamp.project.ecommerceapplication.services;
 
-import com.bootcamp.project.ecommerceapplication.domain.*;
+import com.bootcamp.project.ecommerceapplication.domain.Address;
+import com.bootcamp.project.ecommerceapplication.domain.Seller;
+import com.bootcamp.project.ecommerceapplication.domain.User;
 import com.bootcamp.project.ecommerceapplication.models.AddressModel;
 import com.bootcamp.project.ecommerceapplication.models.SellerModel;
-import com.bootcamp.project.ecommerceapplication.models.UserModel;
 import com.bootcamp.project.ecommerceapplication.repositories.AddressRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.RoleRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.SellerRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.UserRepository;
-import com.bootcamp.project.ecommerceapplication.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -55,7 +53,7 @@ public class SellerService {
 
         emailService.sendEmail(mailMessage);
 
-        return new ResponseEntity<SellerModel>(sellerModel,HttpStatus.CREATED);
+        return new ResponseEntity<SellerModel>(sellerModel, HttpStatus.CREATED);
 
     }
 

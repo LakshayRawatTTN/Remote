@@ -1,6 +1,7 @@
 package com.bootcamp.project.ecommerceapplication.domain;
 
 import com.bootcamp.project.ecommerceapplication.models.CustomerModel;
+import org.springframework.data.repository.cdi.Eager;
 
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ public class Customer {
     private String contact;
 
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;

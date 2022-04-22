@@ -1,4 +1,6 @@
 package com.bootcamp.project.ecommerceapplication.filter;
+import com.bootcamp.project.ecommerceapplication.domain.AuthToken;
+import com.bootcamp.project.ecommerceapplication.repositories.AuthTokenRepository;
 import com.bootcamp.project.ecommerceapplication.services.UserService;
 import com.bootcamp.project.ecommerceapplication.utils.JwtUtils;
 
@@ -25,11 +27,14 @@ import java.io.IOException;
 public class AuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     UserService userService;
+    @Autowired
+    private AuthTokenRepository authTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authToken = request.getHeader("X-AUTH-TOKEN");
+        System.out.println(request.getRequestURI().contains("/login"));
        if(authToken != null){
            UsernamePasswordAuthenticationToken authentication = null;
            String username = null;
@@ -50,7 +55,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
            try {
                userDetails = userService.loadUserByUsername(username);
               System.out.println(userDetails);
-               if (JwtUtils.validate(authToken, userDetails)) {
+               if (JwtUtils.validate(authToken, userDetails)&&authTokenRepository.countByToken(authToken)>0) {
+
                    authentication = JwtUtils.getAuthentication(authToken, userDetails);
                   System.out.println(authentication);
 

@@ -1,23 +1,28 @@
 package com.bootcamp.project.ecommerceapplication.domain;
 
+import com.bootcamp.project.ecommerceapplication.domain.product.Product;
 import com.bootcamp.project.ecommerceapplication.models.SellerModel;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Seller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
     private String gst;
     private String companyContact;
     private String companyName;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @MapsId
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "seller")
+    private Set<Product> products;
 
     public Seller() {
     }
@@ -28,11 +33,11 @@ public class Seller {
         this.companyName = sellerModel.getCompanyName();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -66,5 +71,13 @@ public class Seller {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

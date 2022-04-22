@@ -3,15 +3,33 @@ package com.bootcamp.project.ecommerceapplication.models;
 import com.bootcamp.project.ecommerceapplication.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Column;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 public class SellerModel {
 
+    @Column(unique=true)
+    @NotBlank(message = "Enter Your email")
+    @Email(message = "Enter a Valid email Address ")
     private String email;
+    @NotBlank(message = "first name cannot be empty")
     private String firstName;
+    @NotBlank(message = "middle name cannot be null")
     private String middleName;
+    @NotBlank(message = "last name cannot be null")
     private String lastName;
+    @NotBlank(message = "password is mandatory")
     private String password;
+    @NotBlank(message = "it should be same like password")
+    private String confirmPassword;
+    @Column(unique = true)
+    @NotBlank(message = "Enter Your GST")
     private String gst;
+    @NotBlank(message = "Enter Your Company Contact")
     private String companyContact;
+    @Column(unique = true)
+    @NotBlank(message = "Enter Your Company Name")
     private String companyName;
 
     public SellerModel() {
@@ -87,5 +105,13 @@ public class SellerModel {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

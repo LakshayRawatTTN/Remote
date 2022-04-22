@@ -2,6 +2,7 @@ package com.bootcamp.project.ecommerceapplication.models;
 import com.bootcamp.project.ecommerceapplication.domain.User;
 import org.springframework.lang.NonNull;
 
+import javax.persistence.Column;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -10,19 +11,18 @@ import java.util.List;
 public class UserModel {
 
 
-    @Email(message = "invalid email enter valid email")
+    @Column(unique=true)
+    @NotBlank(message = "Enter Your email")
+    @Email(message = "Enter a Valid email Address ")
     private String email;
     @NotBlank(message = "first name cannot be empty")
-    @NotNull
     private String firstName;
-    @NotNull(message = "middle name cannot be null")
+    @NotBlank(message = "middle name cannot be null")
     private String middleName;
-    @NotNull(message = "last name cannot be null")
+    @NotBlank(message = "last name cannot be null")
     private String lastName;
-    @NotNull
     @NotBlank(message = "password is mandatory")
     private String password;
-    @NotNull
     @NotBlank(message = "it should be same like password")
     private String confirmPassword;
     private List<Long> roles;

@@ -2,21 +2,33 @@ package com.bootcamp.project.ecommerceapplication.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.Column;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 public class CustomerModel {
 
-    private long id;
-    private String firstName;
-    private String middleName;
-    private String lastName;
+    @Column(unique=true)
+    @NotBlank(message = "Enter Your email")
+    @Email(message = "Enter a Valid email Address ")
     private String email;
+    @NotBlank(message = "first name cannot be empty")
+    private String firstName;
+    @NotBlank(message = "middle name cannot be null")
+    private String middleName;
+    @NotBlank(message = "last name cannot be null")
+    private String lastName;
+    @NotBlank(message = "password is mandatory")
+    private String password;
+    @NotBlank(message = "it should be same like password")
+    private String confirmPassword;
+    @NotBlank(message = "Enter Your Contact")
     private String contact;
     private String Password;
 
     private boolean isActive;
 
-    public long getId() {
-        return id;
-    }
+
 
     public String getFirstName() {
         return firstName;
@@ -58,9 +70,7 @@ public class CustomerModel {
         Password = password;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+
 
     public String getContact() {
         return contact;
@@ -76,5 +86,13 @@ public class CustomerModel {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

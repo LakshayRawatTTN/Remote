@@ -1,5 +1,6 @@
 package com.bootcamp.project.ecommerceapplication.controllers;
 
+import com.bootcamp.project.ecommerceapplication.domain.AuthToken;
 import com.bootcamp.project.ecommerceapplication.domain.User;
 import com.bootcamp.project.ecommerceapplication.exceptions.InvalidTokenException;
 import com.bootcamp.project.ecommerceapplication.exceptions.PasswordMismatch;
@@ -7,6 +8,7 @@ import com.bootcamp.project.ecommerceapplication.exceptions.UserNotFoundExceptio
 import com.bootcamp.project.ecommerceapplication.domain.ConfirmationToken;
 import com.bootcamp.project.ecommerceapplication.models.LoginModel;
 import com.bootcamp.project.ecommerceapplication.models.UserModel;
+import com.bootcamp.project.ecommerceapplication.repositories.AuthTokenRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.TokenRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.UserRepository;
 import com.bootcamp.project.ecommerceapplication.services.UserService;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,12 +47,16 @@ public class UserController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthTokenRepository authTokenRepository;
+
     @PostMapping("/register")
     public User register(@Valid @RequestBody UserModel user) throws PasswordMismatch {
         return userService.save(user);
     }
 
     @GetMapping("/{email}")
+    @Secured(value = {"admin"})
     public ResponseEntity<Map> getUser(@PathVariable String email) throws UserNotFoundException {
         return new ResponseEntity<>(userService.getUser(email), HttpStatus.OK);
     }
@@ -62,9 +69,15 @@ public class UserController {
 
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(model.getUsername(), model.getPassword());
+            System.out.println(authenticationToken);
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             response.put("token", JwtUtils.create(authentication));
+            AuthToken authToken = new AuthToken();
+            authToken.setToken(JwtUtils.create(authentication));
+            authToken.setUsername(model.getUsername());
+            authTokenRepository.save(authToken);
+
 
             return ResponseEntity.accepted().body(response);
         } catch (Exception e) {
@@ -72,6 +85,18 @@ public class UserController {
 
         }
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() throws UserNotFoundException {
+        User user = User.currentUser();
+        AuthToken authToken = authTokenRepository.findByUsername(user.getEmail());
+        if(authToken != null){
+            authTokenRepository.delete(authToken);
+            return new ResponseEntity<>("logout successfully",HttpStatus.OK);
+
+        }
+        throw new UserNotFoundException("Please login first");
     }
 
     @GetMapping("/currentuser")
@@ -86,7 +111,7 @@ public class UserController {
         return userService.forgotPassword(email);
     }
 
-//    @PutMapping(value = {"/resetpassword"})
+    //    @PutMapping(value = {"/resetpassword"})
 //    public void resetPassword(@RequestParam("token") String confirmationToken,@RequestBody ObjectNode objectNode) {
 //        ConfirmationToken token = tokenRepository.findByConfirmationToken(confirmationToken);
 //        if (token != null) {
@@ -106,6 +131,10 @@ public class UserController {
 //        }
 //
 //    }
+    @GetMapping("/getcontext")
+    public String getContext() {
+        return SecurityContextHolder.getContext().toString();
+    }
 
 }
 

@@ -1,17 +1,17 @@
 package com.bootcamp.project.ecommerceapplication.controllers;
 
 import com.bootcamp.project.ecommerceapplication.domain.*;
+import com.bootcamp.project.ecommerceapplication.exceptions.FieldExist;
 import com.bootcamp.project.ecommerceapplication.exceptions.InvalidTokenException;
 import com.bootcamp.project.ecommerceapplication.exceptions.PasswordMismatch;
 import com.bootcamp.project.ecommerceapplication.exceptions.UserNotFoundException;
 import com.bootcamp.project.ecommerceapplication.models.*;
+import com.bootcamp.project.ecommerceapplication.models.product.ProductModel;
 import com.bootcamp.project.ecommerceapplication.repositories.AddressRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.CustomerRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.TokenRepository;
 import com.bootcamp.project.ecommerceapplication.repositories.UserRepository;
-import com.bootcamp.project.ecommerceapplication.services.CustomerService;
-import com.bootcamp.project.ecommerceapplication.services.SellerService;
-import com.bootcamp.project.ecommerceapplication.services.UserService;
+import com.bootcamp.project.ecommerceapplication.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.ReflectionUtils;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,14 +38,18 @@ public class CustomerController {
     private CustomerRepository customerRepository;
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private CategoryService categoryService;
 
+    @Autowired
+    private ProductService productService;
     @PostMapping("/register")
     public Customer register(@RequestBody CustomerModel customer) {
         return customerService.addCustomer(customer);
     }
 
     @PutMapping(value = "/resend/activation/{email}")
-    public ResponseEntity<UserModel> resendActivation(@PathVariable String email) throws UserNotFoundException {
+    public ResponseEntity<String> resendActivation(@PathVariable String email) throws UserNotFoundException {
         return customerService.resend(email);
     }
 
@@ -100,7 +105,6 @@ public class CustomerController {
         userRepository.save(user);
         Customer customer = customerRepository.findById(user.getId());
         CustomerModel customerModel = new CustomerModel();
-        customerModel.setId(user.getId());
         customerModel.setEmail(user.getEmail());
         customerModel.setFirstName(user.getFirstName());
         customerModel.setMiddleName(user.getMiddleName());
@@ -134,7 +138,20 @@ public class CustomerController {
         return addressModel;
     }
 
+    @GetMapping("/category/list")
+    public Map<String, List<Object>> getCategoryList(){
+        return categoryService.getCategoryList();
+    }
 
 
+    @GetMapping("/product/{id}")
+    public ProductModel viewProduct(@PathVariable long id) throws FieldExist {
+        return productService.viewProductById(id);
+    }
+
+    @GetMapping("/product/list")
+    public List<ProductModel> getProductList() throws FieldExist {
+        return productService.viewAllProducts();
+    }
 
 }
