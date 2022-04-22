@@ -105,32 +105,33 @@ public class UserController {
     }
 
 
-    @PostMapping(value = {"/forgotpassword"})
-    public ResponseEntity<User> forgotPassword(@RequestBody ObjectNode objectNode) throws UserNotFoundException {
+    @PostMapping("/forgotpassword")
+    public ResponseEntity<String> forgotPassword(@RequestBody ObjectNode objectNode) throws UserNotFoundException {
         String email = objectNode.get("email").asText();
+        System.out.println(email);
         return userService.forgotPassword(email);
     }
 
-    //    @PutMapping(value = {"/resetpassword"})
-//    public void resetPassword(@RequestParam("token") String confirmationToken,@RequestBody ObjectNode objectNode) {
-//        ConfirmationToken token = tokenRepository.findByConfirmationToken(confirmationToken);
-//        if (token != null) {
-//            User user = userRepository.findByEmail(token.getUserEntity().getEmail());
-//            String newPassword = objectNode.get("newPassword").asText();
-//            String confirmPassword = objectNode.get("confirmPassword").asText();
-//            if(newPassword.equals(confirmPassword)){
-//                user.setPassword(passwordEncoder.encode(newPassword));
-//                userRepository.save(user);
-//            }
-//            else {
-//                System.out.println("New Password and Confirm Password do not match");
-//            }
-//
-//        } else {
-//            System.out.println("token invalid");
-//        }
-//
-//    }
+    @PutMapping(value = {"/resetpassword"})
+    public void resetPassword(@RequestParam("token") String confirmationToken,@RequestBody ObjectNode objectNode) {
+        ConfirmationToken token = tokenRepository.findByConfirmationToken(confirmationToken);
+        if (token != null) {
+            User user = userRepository.findByEmail(token.getUserEntity().getEmail());
+            String newPassword = objectNode.get("newPassword").asText();
+            String confirmPassword = objectNode.get("confirmPassword").asText();
+            if(newPassword.equals(confirmPassword)){
+                user.setPassword(passwordEncoder.encode(newPassword));
+                userRepository.save(user);
+            }
+            else {
+                System.out.println("New Password and Confirm Password do not match");
+            }
+
+        } else {
+            System.out.println("token invalid");
+        }
+
+    }
     @GetMapping("/getcontext")
     public String getContext() {
         return SecurityContextHolder.getContext().toString();

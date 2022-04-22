@@ -83,7 +83,7 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public ResponseEntity<User> forgotPassword(String email) throws UserNotFoundException {
+    public ResponseEntity<String> forgotPassword(String email) throws UserNotFoundException {
         User user = userRepository.findByEmail(email);
         if (user != null) {
             ConfirmationToken confirmationToken = new ConfirmationToken(user);
@@ -92,11 +92,11 @@ public class UserService implements UserDetailsService {
             mailMessage.setTo(user.getEmail());
             mailMessage.setSubject("Forgot Password!");
             mailMessage.setText("To reset your password, please click here : "
-                    + "http://localhost:8080/reset-password?token=" + confirmationToken.getConfirmationToken());
+                    + "http://localhost:8080/resetpassword?token=" + confirmationToken.getConfirmationToken());
 
 
             emailService.sendEmail(mailMessage);
-            return new ResponseEntity<User>(user, HttpStatus.OK);
+            return new ResponseEntity<String >("mail is send to user account for reset password", HttpStatus.OK);
         } else {
             throw new UserNotFoundException("user not found");
         }

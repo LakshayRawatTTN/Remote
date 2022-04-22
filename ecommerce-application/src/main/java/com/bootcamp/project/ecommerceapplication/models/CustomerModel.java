@@ -1,5 +1,6 @@
 package com.bootcamp.project.ecommerceapplication.models;
 
+import com.bootcamp.project.ecommerceapplication.domain.Customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
@@ -28,6 +29,18 @@ public class CustomerModel {
 
     private boolean isActive;
 
+    public CustomerModel() {
+    }
+
+    public CustomerModel(Customer customer){
+        this.email = customer.getUser().getEmail();
+        this.firstName = customer.getUser().getFirstName();
+        this.middleName = customer.getUser().getMiddleName();
+        this.lastName = customer.getUser().getLastName();
+        this.contact = customer.getContact();
+
+
+    }
 
 
     public String getFirstName() {

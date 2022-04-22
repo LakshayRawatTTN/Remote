@@ -9,12 +9,14 @@ import com.bootcamp.project.ecommerceapplication.exceptions.FieldExist;
 import com.bootcamp.project.ecommerceapplication.exceptions.UserNotFoundException;
 import com.bootcamp.project.ecommerceapplication.models.CategoryMetadataValueModel;
 import com.bootcamp.project.ecommerceapplication.models.CategoryModel;
+import com.bootcamp.project.ecommerceapplication.models.CustomerModel;
 import com.bootcamp.project.ecommerceapplication.models.MetaDataValueModel;
 import com.bootcamp.project.ecommerceapplication.models.product.ProductModel;
 import com.bootcamp.project.ecommerceapplication.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
@@ -24,6 +26,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
+@Secured("Admin")
 public class AdminController {
 
     @Autowired
@@ -43,7 +46,7 @@ public class AdminController {
     private ProductService productService;
 
     @GetMapping("/getcustomers")
-    public List<Customer> getCustomers() {
+    public List<CustomerModel> getCustomers() {
         return customerService.getList();
     }
 

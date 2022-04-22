@@ -13,6 +13,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,9 +64,14 @@ public class CustomerService {
 
     }
 
-    public List<Customer> getList() {
+    public List<CustomerModel> getList() {
         List<Customer> customers = customerRepository.findAll();
-        return customers;
+        List<CustomerModel> listCustomer = new ArrayList<>();
+        for(Customer customer : customers){
+            CustomerModel customerModel = new CustomerModel(customer);
+            listCustomer.add(customerModel);
+        }
+        return listCustomer;
     }
 
     public ResponseEntity<String> resend(String email) throws UserNotFoundException {

@@ -17,8 +17,6 @@ public class Address {
     private String label;
 
 
-
-
     public Address() {
     }
 
